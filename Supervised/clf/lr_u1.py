@@ -425,7 +425,7 @@ clf_lr = LogisticRegression(random_state = 1337)
 clf_lr.fit(X_train, y_train)
 
 # Predicting the train set results
-y_pred = clf_gb.predict(X_train)
+y_pred = clf_lr.predict(X_train)
 accuracy_score(y_train, y_pred)
 
 # CV  0.766, 0.044
