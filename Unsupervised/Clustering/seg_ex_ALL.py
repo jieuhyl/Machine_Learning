@@ -44,7 +44,7 @@ df['Cluster_AP'] = ap.fit_predict(X).astype(str)
 
 
 
-''' Kmeans '''
+''' kmeans '''
 from sklearn.cluster import KMeans
 # define the model
 km = KMeans(n_clusters = 9, init = 'k-means++', random_state = 1337)
@@ -53,7 +53,7 @@ df['Cluster_KM'] = km.fit_predict(X).astype(str)
 
 
 
-''' MiniBatch Kmeans '''
+''' minibatch kmeans '''
 from sklearn.cluster import KMeans, MiniBatchKMeans
 # define the model
 mbkm = MiniBatchKMeans(n_clusters = 9, init = 'k-means++', random_state = 1337)
