@@ -54,7 +54,7 @@ df['Cluster_KM'] = km.fit_predict(X).astype(str)
 
 
 ''' minibatch kmeans '''
-from sklearn.cluster import KMeans, MiniBatchKMeans
+from sklearn.cluster import MiniBatchKMeans
 # define the model
 mbkm = MiniBatchKMeans(n_clusters = 9, init = 'k-means++', random_state = 1337)
 # fit model and predict clusters
@@ -85,6 +85,15 @@ plt.title('Dendrogram')
 plt.xlabel('Customers')
 plt.ylabel('Euclidean distances')
 plt.show()
+
+
+
+''' gaussian mixture '''
+from sklearn.mixture import GaussianMixture, BayesianGaussianMixture
+# define the model
+gm = GaussianMixture(n_components=9, covariance_type='full')
+# fit model and predict clusters
+df['Cluster_GM'] = gm.fit_predict(X)
 
 
 
