@@ -108,7 +108,7 @@ df['Cluster_DB'] = db.fit_predict(X)
 ''' optics '''
 from sklearn.cluster import OPTICS
 # define the model
-op = OPTICS(eps=0.8, min_samples=10)
+op = OPTICS(xi = 0.05, min_samples=10, min_cluster_size = 0.1)
 # fit model and predict clusters
 df['Cluster_OP'] = op.fit_predict(X)
 
