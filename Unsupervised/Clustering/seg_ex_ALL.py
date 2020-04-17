@@ -62,6 +62,15 @@ df['Cluster_MBKM'] = mbkm.fit_predict(X).astype(str)
 
 
 
+''' mean shift '''
+from sklearn.cluster import MeanShift
+# define the model
+ms = MeanShift()
+# fit model and predict clusters
+df['Cluster_MS'] = ms.fit_predict(X)
+
+
+
 ''' agglomerative '''
 from sklearn.cluster import AgglomerativeClustering
 import scipy.cluster.hierarchy as sch
