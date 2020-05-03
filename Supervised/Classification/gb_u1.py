@@ -419,7 +419,7 @@ X_test = test.values
 
 
 
-'''7: Gradient Boosting'''
+''' 8: Gradient Boosting'''
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingClassifier
