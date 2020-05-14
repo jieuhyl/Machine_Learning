@@ -8,7 +8,7 @@ Created on Sun May  3 04:45:01 2020
 
 
 # dt =========================================================================
-''' 8: HistGradient Boosting'''
+''' 8: Hist Gradient Boosting'''
 from sklearn.experimental import enable_hist_gradient_boosting 
 from sklearn.ensemble import HistGradientBoostingRegressor
 mod_hgb = HistGradientBoostingRegressor(validation_fraction=0.2,
