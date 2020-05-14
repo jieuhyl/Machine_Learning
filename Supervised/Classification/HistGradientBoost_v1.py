@@ -6,7 +6,7 @@ Created on Sun May  3 03:14:13 2020
 """
 
 
-''' 9: HistGradient Boosting'''
+''' 9: Hist Gradient Boosting'''
 from sklearn.experimental import enable_hist_gradient_boosting 
 from sklearn.ensemble import HistGradientBoostingClassifier
 clf_hgb = HistGradientBoostingClassifier(validation_fraction=0.2,
