@@ -159,7 +159,6 @@ print('XGB_BAYES AUC_ROC: %.3f' % roc_auc_score(y_test, y_pred))
 
 # also BayesSearchCV needs to work on the distributions of the experiments but it is less sensible to them
 
-
 bayes_space  = {'learning_rate': Real(0.0001, 1, 'log-uniform'),
                 'num_leaves': Integer(2, 100),
                 'max_depth': Integer(1, 100),
@@ -206,7 +205,7 @@ for baseEstimator in ['GP', 'RF', 'ET', 'GBRT']:
 '''
         
 start_time = time.time()
-bayes_search = bayes_search.fit(X_train, y_train, callbacks=[DeltaXStopper(0.0001), DeadlineStopper(60*10)])
+bayes_search = bayes_search.fit(X_train, y_train, callback = [DeltaXStopper(0.0001), DeadlineStopper(60*10)])
 print('Training time: {} minutes'.format(round((time.time() - start_time)/60, 2)))
 bayes_search.best_params_, bayes_search.best_score_ 
 
