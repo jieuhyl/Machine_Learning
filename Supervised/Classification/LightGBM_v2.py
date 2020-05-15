@@ -70,6 +70,7 @@ param_grid = {
               'feature_fraction':[0.5],
               'lambda_l1':[0,0.1,1,10],
               'lambda_l2':[0,0.1,1,10],
+              'min_gain_to_split':[0,0.1,1,10],
               'num_iterations':[400]}
 
 fit_params = {'early_stopping_rounds': 100,
@@ -113,6 +114,7 @@ param_distribution = {'learning_rate': loguniform(0.0001, 1.0),
                       'colsample_bynode': uniform(0.01,1),
                       'reg_alpha': loguniform(0.0001, 100),
                       'reg_lambda': loguniform(0.001, 100),
+                      'min_gain_to_split': loguniform(0.001, 100),
                       'scale_pos_weight': loguniform(1e-6, 100),
                       'n_estimators': randint(50, 500)}
 
@@ -171,6 +173,7 @@ bayes_space  = {'learning_rate': Real(0.0001, 1, 'log-uniform'),
                 'colsample_bynode': Real(0.01, 1, 'uniform'),
                 'reg_lambda': Real(1e-9, 1000, 'log-uniform'),
                 'reg_alpha': Real(1e-9, 1000, 'log-uniform'),
+                'min_gain_to_split': Real(1e-9, 1000, 'log-uniform'),
                 'scale_pos_weight': Real(1e-6, 100, 'log-uniform'),
                 'n_estimators': Integer(50, 500)}
 
