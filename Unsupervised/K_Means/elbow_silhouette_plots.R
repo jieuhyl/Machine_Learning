@@ -1,0 +1,100 @@
+rm(list = ls())
+setwd("C:/Users/Jie.Hu/Desktop/Segmentation/0522")
+#set.seed(1337)
+
+library(dplyr)
+library(tidyverse)
+library(cluster)
+#install.packages("factoextra")
+library(factoextra)
+library(Rtsne)
+library(ggplot2) 
+
+
+# read data
+df <- read.csv('Design Home_Clustering_Vars.csv', header=T, stringsAsFactors=FALSE)
+df_seg <- df[,-c(1,2)]
+
+# check missing value
+sapply(df_seg, function(x) sum(is.na(x)))
+
+
+#normalize
+#normalize <- function(x) {
+#  return ((x - min(x)) / (max(x) - min(x)))
+#}
+
+#df_seg[,-1] <- as.data.frame(lapply(df_seg[,-1], normalize))
+
+
+
+# k-means==============================================================================
+# use elbow method to find the optimal mumber of clusters
+wcss<- vector()
+
+for (i in 1:20)
+  wcss[i] <- kmeans(df_seg, i)$tot.withinss/kmeans(df_seg, i)$totss
+
+plot(1:20, wcss, type='b', 
+     main='Clusters of Clients',
+     xlab='Number of Clusters',
+     ylab='Percentage of Within Cluster Sum of Squares',
+     pch=20, cex=2)
+
+#============================================================
+# Elbow Method
+set.seed(123)
+fviz_nbclust(df_seg, kmeans, method = "wss")+
+  labs(subtitle = "Elbow method")
+
+# function to compute total within-cluster sum of square
+wss <- function(k) {
+  kmeans(df_seg, k, iter = 100, nstart = 10)$tot.withinss
+}
+
+# Compute and plot wss for k = 1 to k = 15
+k.values <- 1:15
+
+# extract wss for 2-15 clusters
+wss_values <- map_dbl(k.values, wss)
+
+plot(k.values, wss_values,
+     type="b", pch = 19, frame = FALSE, 
+     xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
+
+
+#============================================================
+# Silhouette Method
+set.seed(123)
+fviz_nbclust(df_seg, kmeans, method = "silhouette")+
+  labs(subtitle = "Silhouette method")
+
+# function to compute average silhouette for k clusters
+avg_sil <- function(k) {
+  km.res <- kmeans(df_seg, k, iter = 100, nstart = 10)
+  ss <- silhouette(km.res$cluster, dist(df))
+  mean(ss[, 3])
+}
+
+# Compute and plot wss for k = 2 to k = 15
+k.values <- 2:15
+
+# extract avg silhouette for 2-15 clusters
+avg_sil_values <- map_dbl(k.values, avg_sil)
+
+plot(k.values, avg_sil_values,
+     type = "b", pch = 19, frame = FALSE, 
+     xlab = "Number of clusters K",
+     ylab = "Average Silhouettes")
+
+
+#============================================================
+# apply to the data
+set.seed(1234)
+km5 <- kmeans(df_seg, 5, iter = 100, nstart = 10)
+df$Cluster5 = km5$cluster
+
+table(df$Cluster5)
+
+
