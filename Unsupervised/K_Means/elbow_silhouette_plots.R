@@ -88,7 +88,18 @@ plot(k.values, avg_sil_values,
      xlab = "Number of clusters K",
      ylab = "Average Silhouettes")
 
+       
+# Visualize kmeans clustering
+km5 <- kmeans(df_seg, 5, nstart = 10)
 
+fviz_cluster(km5, df_seg, ellipse.type = "norm")+
+  theme_minimal()
+
+# Visualize silhouhette information
+sil <- silhouette(km5$cluster, dist(df_seg))
+fviz_silhouette(sil)
+       
+       
 #============================================================
 # apply to the data
 set.seed(1234)
