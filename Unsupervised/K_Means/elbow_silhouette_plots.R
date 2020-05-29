@@ -41,6 +41,17 @@ plot(1:20, wcss, type='b',
      ylab='Percentage of Within Cluster Sum of Squares',
      pch=20, cex=2)
 
+       
+wcss<- vector()
+
+for (i in 1:15)
+  wcss[i] <- kmeans(df_seg, i)$betweenss/kmeans(df_seg, i)$totss
+
+plot(1:15, wcss, type='b', 
+     #main='Clusters of Clients',
+     xlab='Number of Clusters',
+     ylab='Percentage of Explained Variance',
+     pch=20, cex=2)
 #============================================================
 # Elbow Method
 set.seed(123)
