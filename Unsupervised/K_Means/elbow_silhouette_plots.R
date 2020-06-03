@@ -120,3 +120,64 @@ df$Cluster5 = km5$cluster
 table(df$Cluster5)
 
 
+
+# Euclidean distance
+eu_dist <- daisy(df_seg,
+                 metric = "euclidean")
+
+# t-SNE
+set.seed(123)
+tsne_obj <- Rtsne(eu_dist, is_distance = TRUE)
+
+
+# graph
+tsne_data <- as.data.frame(tsne_obj$Y)
+colnames(tsne_data) <- c("X", "Y")
+tsne_data <- cbind(ID = df$ï..record..Record.number, tsne_data)
+tsne_data$Cluster <- factor(df$Segment.Cluster.memberships.from.kmeans.5)
+
+ggplot(aes(x = X, y = Y), data = tsne_data) +
+  geom_point(aes(color=Cluster, shape = Cluster), size = 2) +
+  scale_shape_manual(values = 1:5) +
+  ggtitle("Clustering Graph_5") + 
+  xlab("Dimension_1") + 
+  ylab("Dimension_2") +
+  theme_bw() 
+
+
+# PCA
+prin_comp <- prcomp(df_seg, scale. = T)
+# check the loadings
+head(prin_comp$rotation[, 1:5])
+
+#compute standard deviation of each principal component
+std_dev <- prin_comp$sdev
+
+#compute variance
+pr_var <- std_dev^2
+
+#check variance of first 5 components greater than 1
+pr_var[1:10]
+
+#proportion of variance explained
+prop_varex <- pr_var/sum(pr_var)
+prop_varex[1:20]
+
+cumsum(prop_varex[1:7])
+
+View(prin_comp$x)
+
+# graph
+pca_data <- as.data.frame(prin_comp$x)
+pca_data <- pca_data[1:2]
+colnames(pca_data) <- c("X", "Y")
+pca_data <- cbind(ID = df$ï..record..Record.number, pca_data)
+pca_data$Cluster <- factor(df$Segment.Cluster.memberships.from.kmeans.5)
+
+ggplot(aes(x = X, y = Y), data = pca_data) +
+  geom_point(aes(color=Cluster, shape = Cluster), size = 2) +
+  scale_shape_manual(values = 1:5) +
+  ggtitle("Clustering Graph_5") + 
+  xlab("Dimension_1") + 
+  ylab("Dimension_2") +
+  theme_bw()        
