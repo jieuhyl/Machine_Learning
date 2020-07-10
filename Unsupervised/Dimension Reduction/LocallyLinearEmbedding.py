@@ -25,7 +25,7 @@ iris_df.replace({"species": dct}, inplace = True)
 X = iris_df.iloc[:,0:4].values
 y = iris_df['species'].values
 
-
+# standard, modified or ‘ltsa’
 ltsa = LocallyLinearEmbedding(n_neighbors=100, n_components=2, method = 'ltsa')
 result = ltsa.fit_transform(X)
   
