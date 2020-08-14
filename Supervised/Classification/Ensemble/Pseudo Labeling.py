@@ -6,6 +6,8 @@ Created on Tue Aug 11 12:20:38 2020
 """
 
 
+
+import random
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.metrics import roc_auc_score
@@ -35,10 +37,13 @@ roc_auc_score(y_test, y_pred)
 
 plt.hist(y_pred, bins = 100)
 
-#==============================================================================
+
+
+
+
 ''' Psuedo Labeling '''
 
-
+# rskf ========================================================================
 pos_threshold = 0.85
 neg_threshold = 0.15
 idx_pseudo = np.argwhere(np.logical_or(y_pred > pos_threshold, y_pred < neg_threshold ))[:,0]
@@ -97,7 +102,59 @@ roc_auc_score(y_test, lst_res)
 
 
 
+# tts==========================================================================
+pos_threshold = 0.85
+neg_threshold = 0.15
+idx_pseudo = np.argwhere(np.logical_or(y_pred > pos_threshold, y_pred < neg_threshold ))[:,0]
+
+X_test_pseudo = X_test[idx_pseudo]
+y_test_pseudo = y_pred[idx_pseudo]
+y_test_pseudo = y_test_pseudo.round().astype(int)
+
+#y_test_pseudo[y_test_pseudo > 0.5] = 1
+#y_test_pseudo[y_test_pseudo <= 0.5] = 0
 
 
+auc_pred = []
+test_pred = []
+pos_threshold = 0.85
+neg_threshold = 0.15
+n_fold = 0
+
+X_train_valid = np.concatenate([X_train, X_valid], axis = 0)
+y_train_valid = np.concatenate([y_train, y_valid], axis = 0)
+
+#rand = [random.randint(0, 1000) for _ in range(10)]
+for seed in [random.randint(0, 1000) for _ in range(10)]:
+    print('seed: %d' % seed)
+    train_x, valid_x, train_y, valid_y = train_test_split(X_train_valid, y_train_valid, test_size=0.1, random_state=seed)
+    
+    train_x = np.concatenate([train_x, X_test_pseudo], axis = 0)
+    train_y = np.concatenate([train_y, y_test_pseudo], axis = 0)
+    print('train size: {}, pseudo size: {}'.format(train_x.shape, len(idx_pseudo)))
+    
+    model = LogisticRegression(solver='lbfgs')
+    model.fit(train_x, train_y)
+    oof_preds = model.predict_proba(valid_x)[:, 1]
+    
+    print('Fold %1d AUC: %.6f' % (n_fold + 1, roc_auc_score(valid_y, oof_preds)))
+    auc_pred.append(roc_auc_score(valid_y, oof_preds))
+    
+    # pseudo labeling
+    test_prob = model.predict_proba(X_test)[:, 1]
+    idx_pseudo = np.argwhere(np.logical_or(test_prob > pos_threshold, test_prob < neg_threshold ))[:,0]
+    X_test_pseudo = X_test[idx_pseudo]
+    y_test_pseudo = y_pred[idx_pseudo]
+    y_test_pseudo = y_test_pseudo.round().astype(int)
+
+    test_pred.append([model.predict_proba(X_test)[:, 1]])
+    n_fold = n_fold + 1
+print('Full AUC score %.6f' % np.mean(auc_pred)) 
+
+
+res = sorted(zip(auc_pred, test_pred), reverse=True)[:1]
+lst = [j for (i,j) in res]
+lst_res = np.mean(lst, axis = 0)[0]
+roc_auc_score(y_test, lst_res)
 
 
