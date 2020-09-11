@@ -19,8 +19,16 @@ X = df.iloc[:, 1:26].values
 y = df.iloc[:,26].values
 
 
+'''
+# transformation
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+transform = MinMaxScaler()
+X = transform.fit_transform(X)
+'''
+
+
 ''' MLR '''
-from sklearn.metrics import roc_auc_score, f1_score, accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score, GridSearchCV
 from sklearn.linear_model import LogisticRegression
 
