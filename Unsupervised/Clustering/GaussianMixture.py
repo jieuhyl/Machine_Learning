@@ -32,6 +32,25 @@ for cluster in clusters:
 plt.show()
 
 
+# choose n and type
+n_components = np.arange(2, 10)
+covariance_type = ['full', 'tied', 'diag', 'spherical']
+length = [str(x)+'_'+y[0] for x in n_components for y in covariance_type]
+models = [GaussianMixture(n_components = n, covariance_type = m, random_state=1337).fit(X)
+          for n in n_components for m in covariance_type]
+
+plt.figure(figsize = (12, 8))
+plt.plot(length , [m.aic(X) for m in models], label='BIC')
+plt.plot(length, [m.bic(X) for m in models], label='AIC')
+plt.legend(loc='best')
+
+
+
+aic = [m.aic(X) for m in models]
+bic = [m.bic(X) for m in models]
+
+
+
 # choose n
 n_components = np.arange(2, 6)
 models = [GaussianMixture(n, covariance_type='full', random_state=1337).fit(X)
